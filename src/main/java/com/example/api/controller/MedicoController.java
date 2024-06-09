@@ -1,14 +1,12 @@
 package com.example.api.controller;
 
-import com.example.api.medico.DatosListadoMedico;
-import com.example.api.medico.DatosRegistroMedico;
-import com.example.api.medico.Medico;
-import com.example.api.medico.MedicoRepository;
+import com.example.api.medico.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,4 +28,16 @@ public class MedicoController {
         return medicoRepository.findAll(paginacion).map(DatosListadoMedico::new);
     }
 
+    @PutMapping
+    @Transactional
+    public void AtualizarMedico(@RequestBody @Valid DatosActualizarMedico datosActualizarMedico) {
+        Medico medico = medicoRepository.getReferenceById(datosActualizarMedico.id());
+        medico.actualizarDatos(datosActualizarMedico);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminarMedico(@PathVariable Long id) {
+        Medico medico = medicoRepository.getReferenceById(id);
+        medicoRepository.delete(medico);
+    }
 }
