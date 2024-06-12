@@ -1,7 +1,7 @@
 package com.example.api.controller;
 
-import com.example.api.direccion.DatosDireccion;
-import com.example.api.medico.*;
+import com.example.api.domain.direccion.DatosDireccion;
+import com.example.api.domain.medico.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/medicos")
@@ -42,7 +41,6 @@ public class MedicoController {
         var datosMedico = new DatosRespuestaMedico(medico.getId(), medico.getNombre(), medico.getEmail(), medico.getTelefono(), medico.getEspecialidad().toString(), new DatosDireccion(medico.getDireccion().getCalle(), medico.getDireccion().getDistrito(), medico.getDireccion().getCiudad(), medico.getDireccion().getNumero(), medico.getDireccion().getComplemento()));
         return ResponseEntity.ok(datosMedico);
     }
-
 
     @PutMapping
     @Transactional

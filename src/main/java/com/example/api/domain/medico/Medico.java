@@ -1,6 +1,6 @@
-package com.example.api.medico;
+package com.example.api.domain.medico;
 
-import com.example.api.direccion.Direccion;
+import com.example.api.domain.direccion.Direccion;
 import jakarta.persistence.*;
 import lombok.*;
 

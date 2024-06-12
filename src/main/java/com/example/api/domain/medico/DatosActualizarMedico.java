@@ -1,6 +1,6 @@
-package com.example.api.medico;
+package com.example.api.domain.medico;
 
-import com.example.api.direccion.DatosDireccion;
+import com.example.api.domain.direccion.DatosDireccion;
 import jakarta.validation.constraints.NotNull;
 
 public record DatosActualizarMedico(

@@ -1,4 +1,4 @@
-package com.example.api.direccion;
+package com.example.api.domain.direccion;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
