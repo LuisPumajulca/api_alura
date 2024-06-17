@@ -1,6 +1,9 @@
 package com.example.api.controller;
 
 import com.example.api.domain.usuarios.DatosAutenticacionUsuario;
+import com.example.api.domain.usuarios.Usuario;
+import com.example.api.infra.security.DatosJWTToken;
+import com.example.api.infra.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +22,15 @@ public class AutenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
-    public ResponseEntity<DatosAutenticacionUsuario> autenticar(@RequestBody @Valid DatosAutenticacionUsuario datosAutenticacionUsuario) {
+    public ResponseEntity autenticar(@RequestBody @Valid DatosAutenticacionUsuario datosAutenticacionUsuario) {
         Authentication token = new UsernamePasswordAuthenticationToken(datosAutenticacionUsuario.login(), datosAutenticacionUsuario.clave());
-        authenticationManager.authenticate(token);
-        return ResponseEntity.ok().build();
+        var usuarioAutenticado = authenticationManager.authenticate(token);
+        var JWTToken = tokenService.generateToken((Usuario) usuarioAutenticado.getPrincipal());
+        return ResponseEntity.ok(new DatosJWTToken(JWTToken));
     }
 
 }
