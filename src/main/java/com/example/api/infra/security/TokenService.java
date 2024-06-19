@@ -34,6 +34,9 @@ public class TokenService {
     }
 
     public String getSubject(String token) {
+        if (token == null){
+            throw new RuntimeException("Token invalido");
+        }
         DecodedJWT verifier = null;
         try {
             Algorithm algorithm = Algorithm.HMAC256(apiSecret);  //validando firma
