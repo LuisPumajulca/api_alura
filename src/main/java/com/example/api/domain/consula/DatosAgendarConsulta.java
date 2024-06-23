@@ -1,5 +1,6 @@
 package com.example.api.domain.consula;
 
+import com.example.api.domain.medico.Especialidad;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 
@@ -12,6 +13,7 @@ public record DatosAgendarConsulta(
         Long idMedico,
         @NotNull
         @Future
-        LocalDateTime fecha
+        LocalDateTime fecha,
+        Especialidad especialidad
         ) {
 }
