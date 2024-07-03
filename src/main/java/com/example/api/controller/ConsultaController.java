@@ -2,7 +2,7 @@ package com.example.api.controller;
 
 import com.example.api.domain.consula.AgendaDeConsultaService;
 import com.example.api.domain.consula.DatosAgendarConsulta;
-import com.example.api.domain.consula.DatosDetalleConsulta;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @ResponseBody
 @RequestMapping("/consultas")
+@SecurityRequirement(name = "bearer-key")
 public class ConsultaController {
 
     @Autowired
@@ -21,9 +22,8 @@ public class ConsultaController {
     @PostMapping
     @Transactional
     public ResponseEntity agendar(@RequestBody @Valid DatosAgendarConsulta datos){
-
-        agendaDeConsultaService.agendar(datos);
-
-        return ResponseEntity.ok(new DatosDetalleConsulta(null, null, null, null));
+        var response = agendaDeConsultaService.agendar(datos);
+        return ResponseEntity.ok(response);
     }
+
 }
