@@ -1,11 +1,14 @@
 package com.example.api.domain.consula;
 
+import com.example.api.domain.consula.desafio.ValidadorCancelamientoDeConsulta;
 import com.example.api.domain.consula.validaciones.ValidadorDeConsultas;
 import com.example.api.domain.medico.Medico;
 import com.example.api.domain.medico.MedicoRepository;
 import com.example.api.domain.paciente.PacienteRepository;
 import com.example.api.infra.errores.ValidacionDeIntegridad;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +27,9 @@ public class AgendaDeConsultaService {
 
     @Autowired
     List<ValidadorDeConsultas> validadores;
+
+    @Autowired
+    private List<ValidadorCancelamientoDeConsulta> validadoresCancelamiento;
 
     public DatosDetalleConsulta agendar(DatosAgendarConsulta datos) {
 
@@ -45,11 +51,21 @@ public class AgendaDeConsultaService {
             throw new ValidacionDeIntegridad("No existe medicos disponibles para este horario y espeecialidad");
         }
 
-        var consulta = new Consulta(null,medico,paciente,datos.fecha());
+        var consulta = new Consulta(medico, paciente, datos.fecha());
 
         consultaRepository.save(consulta);
 
         return new DatosDetalleConsulta(consulta);
+    }
+    public void cancelar(DatosCancelamientoConsulta datos) {
+        if (!consultaRepository.existsById(datos.idConsulta())) {
+            throw new ValidacionDeIntegridad("Id de la consulta informado no existe!");
+        }
+
+        validadoresCancelamiento.forEach(v -> v.validar(datos));
+
+        var consulta = consultaRepository.getReferenceById(datos.idConsulta());
+        consulta.cancelar(datos.motivo());
     }
 
     private Medico seleccionarMedico(DatosAgendarConsulta datos) {
@@ -62,5 +78,9 @@ public class AgendaDeConsultaService {
         }
 
         return medicoRepository.seleccionarMedicoConEspecialidadEnFecha(datos.especialidad(),datos.fecha());
+    }
+
+    public Page<DatosDetalleConsulta> consultar(Pageable paginacion) {
+        return consultaRepository.findAll(paginacion).map(DatosDetalleConsulta::new);
     }
 }
