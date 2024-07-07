@@ -15,24 +15,26 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 class MedicoRepositoryTest {
+
     @Autowired
     private MedicoRepository medicoRepository;
+
     @Autowired
     private TestEntityManager em;
 
     @Test
     @DisplayName("Deberia retornar nulo cuando el medico encuentre en consulta con otro paciente en ese horario")
     void seleccionarMedicoConEspecialidadEnFechaEscenario1() {
+
+        //given
         var proximoLunes10H = LocalDate.now()
                 .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
                 .atTime(10,0);
